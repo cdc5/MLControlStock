@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MLControlStock.Api", "MLControlStock.Api\MLControlStock.Api.csproj", "{175DE89C-AF24-43C0-860C-7F93169BCD6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MLControlStock.Core", "MLControlStock.Core\MLControlStock.Core.csproj", "{F1202FEB-90AA-4A9F-BFB9-EC53708006CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MlControlStock.Infrastructure", "MlControlStock.Infrastructure\MlControlStock.Infrastructure.csproj", "{F2DF4BD7-134B-4762-BF34-E2A1318A02E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{14216A5E-8758-49AE-8776-EE3E4CA54F31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MlControlStock.UnitTests", "MlControlStock.UnitTests\MlControlStock.UnitTests.csproj", "{A195999E-A60D-4A49-B705-71CE21E63542}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLControlStock.IntegrationTests", "MLControlStock.IntegrationTests\MLControlStock.IntegrationTests.csproj", "{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{175DE89C-AF24-43C0-860C-7F93169BCD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{175DE89C-AF24-43C0-860C-7F93169BCD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{175DE89C-AF24-43C0-860C-7F93169BCD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{175DE89C-AF24-43C0-860C-7F93169BCD6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1202FEB-90AA-4A9F-BFB9-EC53708006CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1202FEB-90AA-4A9F-BFB9-EC53708006CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1202FEB-90AA-4A9F-BFB9-EC53708006CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1202FEB-90AA-4A9F-BFB9-EC53708006CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2DF4BD7-134B-4762-BF34-E2A1318A02E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2DF4BD7-134B-4762-BF34-E2A1318A02E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2DF4BD7-134B-4762-BF34-E2A1318A02E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2DF4BD7-134B-4762-BF34-E2A1318A02E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A195999E-A60D-4A49-B705-71CE21E63542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A195999E-A60D-4A49-B705-71CE21E63542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A195999E-A60D-4A49-B705-71CE21E63542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A195999E-A60D-4A49-B705-71CE21E63542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A195999E-A60D-4A49-B705-71CE21E63542} = {14216A5E-8758-49AE-8776-EE3E4CA54F31}
+		{F566F9C5-CE4B-49F3-A618-AF5C2DC8D3DD} = {14216A5E-8758-49AE-8776-EE3E4CA54F31}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {134AAE80-A357-491D-9F83-54AE07D12DFC}
+	EndGlobalSection
+EndGlobal
