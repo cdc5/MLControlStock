@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.Exceptions
+namespace MLControlStock.Core.Exceptions
 {
     public class BusinessException:Exception
     {
@@ -19,7 +19,7 @@ namespace FundaGes.Core.Exceptions
         private static string ifNull(string message)
         {
             if (message == null)
-                return "Sin error retornado desde Api Senasa";
+                return "Sin error retornado desde Api";
             return message;
         }
     }

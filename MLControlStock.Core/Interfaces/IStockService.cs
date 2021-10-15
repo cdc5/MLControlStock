@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MLControlStock.Core.Interfaces
 {
-    public interface IActaService
+    public interface IStockService
     {
 
         //Task<IEnumerable<ActaDto>> GetActasDto(ActaQueryFilter filters, ClaimsPrincipal User);

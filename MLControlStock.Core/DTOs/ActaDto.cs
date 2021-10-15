@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.DTOs
+namespace MLControlStock.Core.DTOs
 {
     public class ActaDto
     {
@@ -22,9 +22,6 @@ namespace FundaGes.Core.DTOs
         public bool? Carbunclo { get; set; }
         public int? TernerasBrucelosis { get; set; }
         public int? ternerasBubalinasBrucelosis { get; set; }
-        public List<StockDto> Stock { get; set; }
-        public List<StockDto> StockDDJJ { get; set; }
-        public string identificacion { get; set; }
-        public string Estado { get; set; }
+        
     }
 }

@@ -15,50 +15,66 @@ using System.Threading.Tasks;
 
 namespace MLControlStock.Core.Services
 {
-    public class ActaService:IActaService
+    public class StockService: IStockService
     {
-        //private IUnitOfWork _UnitOfWork;
-        //private IApiClient _ApiClient;
-        //private readonly IMapper _Mapper;
-        //private IUsuarioService _UsuarioService;
-        //private IFundacionService _FundacionService;
-        //private IAnimalesService _AnimalesService;
+        private IUnitOfWork _UnitOfWork;
+        private IApiClient _ApiClient;
+        private readonly IMapper _Mapper;
 
+        public StockService(IUnitOfWork unitOfWork, IMapper mapper, IApiClient ApiClient)
+        {
+            _UnitOfWork = unitOfWork;
+            _ApiClient = ApiClient;
+            _Mapper = mapper;    
+        }
 
-        //public ActaService(IUnitOfWork unitOfWork, IMapper mapper, IApiClient ApiClient,
-        //                   IUsuarioService UsuarioService, IFundacionService fundacionService,
-        //                   IAnimalesService AnimalesService)
-        //{
-        //    _UnitOfWork = unitOfWork;
-        //    _ApiClient = ApiClient;
-        //    _Mapper = mapper;
-        //    _UsuarioService = UsuarioService;
-        //    _FundacionService = fundacionService;
-        //    _AnimalesService = AnimalesService;
-        //}
+        public async Task<IEnumerable<Stock>> GetStock(string deposito,string ubicacion)
+        {
+            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito);
+            if (stock != null)
+                throw new BusinessException(String.Format("No se encuentran productos en la ubicación {0}-{1}",deposito,ubicacion));
+            return stock;
+        }
 
-        //public async Task InsertActaDto(ActaDto actaDto, int EstadoID,ClaimsPrincipal User)
-        //{
-        //    var actaEsta = await GetActa(actaDto.Codigo,User);
-        //    if (actaEsta != null)
-        //        throw new BusinessException(String.Format("El acta {0} ya se encuentra registrada en la base de datos. Por favor utilice el método actualizar para modificarla.", actaDto.Codigo));
-        //    var acta = _Mapper.Map<Actas>(actaDto);
-        //    await InsertActa(acta, EstadoID, User);
-        //}
+        public async Task<IEnumerable<Stock>> GetStockPorProducto(string deposito, string producto)
+        {
+            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.ProductId == producto);
+            if (stock != null)
+                throw new BusinessException(String.Format("No se encuentran el producto {0} en el depósito {1}", producto, deposito));
+            return stock;
+        }
 
-        //private async Task InsertActa(Actas acta, int EstadoID, ClaimsPrincipal User, bool PorCodigo = false)
-        //{
-        //    var usuario = _UsuarioService.GetUsuario(User);
-        //    await CargarNombresAnimales<ActasAnimales>(acta.ActasAnimales, User,PorCodigo);
-        //    await CargarNombresAnimales<ActasAnimalesDDJJ>(acta.ActasAnimalesDDJJ, User, PorCodigo);
-        //    acta.FechaCarga = DateTime.Now;
-        //    acta.FundacionId = usuario.Fundacion.Id;
-        //    acta.UsuarioCreador = usuario.Cuit;
-        //    acta.Estado = EstadoID;
-        //    await _UnitOfWork.ActaRepository.Insert(acta);
-        //    await _UnitOfWork.SaveChangesAsync();
-        //}
+        private async Task InsertProducto(string deposito, string ubicacion,string producto,int cantidad)
+        {
+            if (!ValidarUbicacion(ubicacion))
+                throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{{Area}}}-{{{Pasillo}}}-{{{Fila}}}-{{{Cara}}}", ubicacion));
 
+            if (!EstaEnDeposito(producto))
+                throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{{Area}}}-{{{Pasillo}}}-{{{Fila}}}-{{{Cara}}}", ubicacion));
+
+            Ubicacion ubi = new Ubicacion(ubicacion);
+            Stock stock = new Stock();
+            stock.Deposito = deposito;
+            stock.Area = ubi.Area;
+            stock.Pasillo = ubi.Pasillo;
+            stock.Fila = ubi.Fila;
+            stock.Cara = ubi.Cara;
+            stock.ProductId = producto;
+            stock.Cantidad = cantidad;
+            
+            await _UnitOfWork.StockRepository.Insert(stock);
+            await _UnitOfWork.SaveChangesAsync();
+        }
+
+        private bool ValidarUbicacion(string ubicacion)
+        {
+            return true;
+        }
+
+        private bool EstaEnDeposito(string producto)
+        {
+            return true;
+        }
         //private async Task CargarNombresAnimales<T>(ICollection<T> animales,ClaimsPrincipal User, bool PorCodigo = false) where T:IActasAnimales 
         //{
 
@@ -103,7 +119,7 @@ namespace MLControlStock.Core.Services
         //            }
         //        }
         //    }
-            
+
 
 
 
@@ -123,46 +139,7 @@ namespace MLControlStock.Core.Services
         //    return true;
         //}
 
-        //public async Task<Actas> GetActa(long id, ClaimsPrincipal User)
-        //{
-        //    var usuario = _UsuarioService.GetUsuario(User);
-        //    var actas = (await GetActas(x => x.Id == id && x.FundacionId == usuario.FundacionId)).FirstOrDefault();
-        //    return actas;
-        //}
 
-        //public async Task<Actas> GetActa(string codigo, ClaimsPrincipal User)
-        //{
-        //    var usuario = _UsuarioService.GetUsuario(User);
-        //    var actas = (await GetActas(x => x.Codigo == codigo && x.FundacionId == usuario.FundacionId)).FirstOrDefault();
-        //    return actas;
-        //}
-
-        //public async Task<IEnumerable<ActaDto>> GetActasDto(ActaQueryFilter filters, ClaimsPrincipal User)
-        //{
-        //    var usuario = _UsuarioService.GetUsuario(User);
-        //    var Actas = await GetActas(x=>x.FundacionId == usuario.FundacionId, null);
-        //    if (filters.Id != null)
-        //    {
-        //        Actas = Actas.Where(x => x.Id == filters.Id);
-        //    }
-        //    if (filters.Codigo != null)
-        //    {
-        //        Actas = Actas.Where(x => x.Codigo == filters.Codigo);
-        //    }
-        //    if (filters.CuitVacunador != null)
-        //    {
-        //        Actas = Actas.Where(x => x.Vacunador == filters.CuitVacunador);
-        //    }
-        //    var ActasDto = _Mapper.Map<List<ActaDto>>(Actas);
-        //    return ActasDto; 
-        //}
-
-        //public async Task<IEnumerable<Actas>> GetActas(Expression<Func<Actas, bool>> filter = null,
-        //                  Func<IQueryable<Actas>, IOrderedQueryable<Actas>> orderBy = null)
-        //{
-        //    var Actas =_UnitOfWork.ActaRepository.Get(filter, orderBy, "ActasAnimales,ActasAnimalesDDJJ,EstadoNavigation");
-        //    return Actas;
-        //}
 
         //public async Task<IEnumerable<ApiActasDto>> GetActasSenasa(string campania,  ClaimsPrincipal User)
         //{
@@ -288,7 +265,7 @@ namespace MLControlStock.Core.Services
         //        }
         //        else
         //            throw new BusinessException("El campo Estado debe estar completo");
-                
+
         //        _UnitOfWork.ActaRepository.Update(acta);
         //        await _UnitOfWork.SaveChangesAsync();
         //        return result;
@@ -326,7 +303,7 @@ namespace MLControlStock.Core.Services
         //        {
         //            ConfirmarActaContent cac = new ConfirmarActaContent(usuario.Fundacion.Cuit, usuario.Fundacion.Cuit, usuario.Fundacion.TokenSenasa, id.ToString());
         //            res = System.Convert.ToInt64(await _ApiClient.ConfirmarActa(cac));
-                    
+
         //            ActaContent ac = new ActaContent(usuario.Fundacion.Cuit, usuario.Fundacion.wsUsername, usuario.Fundacion.TokenSenasa, campania, codigo);
         //            var actas = await _ApiClient.Acta(ac);
         //            if (actas != null && actas.Count > 0)
@@ -338,7 +315,7 @@ namespace MLControlStock.Core.Services
         //            }                        
         //            else
         //                throw new BusinessException(String.Format("El Acta {0} no se ha encontrado", res));                    
-                    
+
         //            return res.Value;
         //        }
         //        else if (Estado == Parametros.Anulada.Nombre)

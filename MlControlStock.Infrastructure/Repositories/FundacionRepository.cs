@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FundaGes.Core.Entities;
-using FundaGes.Core.Interfaces;
-using FundaGes.Infrastructure.Data;
+using MLControlStock.Core.Entities;
+using MLControlStock.Core.Interfaces;
+using MLControlStock.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace FundaGes.Infrastructure.Repositories
+namespace MLControlStock.Infrastructure.Repositories
 {
-    public class FundacionRepository : Repository<Fundaciones>, IFundacionRepository
-    {
-        public FundacionRepository(FundaGesContext context) : base(context)
-        {
+    //public class FundacionRepository : Repository<Fundaciones>, IFundacionRepository
+    //{
+    //    public FundacionRepository(FundaGesContext context) : base(context)
+    //    {
 
-        }        
+    //    }        
 
-        public Fundaciones GetFundacionPorCuit(string Cuit)
-        {
-            return  _entities.Where(t => t.Cuit == Cuit).FirstOrDefault();
-        }
-    }
+    //    public Fundaciones GetFundacionPorCuit(string Cuit)
+    //    {
+    //        return  _entities.Where(t => t.Cuit == Cuit).FirstOrDefault();
+    //    }
+    //}
 }

@@ -1,5 +1,5 @@
-﻿using FundaGes.Core.Interfaces;
-using FundaGes.Infrastructure.Data;
+﻿using MLControlStock.Core.Interfaces;
+using MLControlStock.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,14 +8,14 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FundaGes.Infrastructure.Repositories
+namespace MLControlStock.Infrastructure.Repositories
 {
     public class Repository<T>: IRepository<T> where T: class
     {
-        private readonly FundaGesContext _context;
+        private readonly MLControlStockContext _context;
         protected readonly DbSet<T> _entities;
 
-        public Repository(FundaGesContext context)
+        public Repository(MLControlStockContext context)
         {
             _context = context;
             _entities = context.Set<T>();

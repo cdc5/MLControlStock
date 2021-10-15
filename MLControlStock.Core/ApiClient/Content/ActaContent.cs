@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.ApiClient.Content
+namespace MLControlStock.Core.ApiClient.Content
 {
     public class ActaContent
     {

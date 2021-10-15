@@ -1,4 +1,4 @@
-﻿using FundaGes.Core.Exceptions;
+﻿using MLControlStock.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace FundaGes.Infrastructure.Filters
+namespace MLControlStock.Infrastructure.Filters
 {
     public class GlobalExceptionFilter : IExceptionFilter
     {

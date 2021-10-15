@@ -1,11 +1,11 @@
-﻿using FundaGes.Core.ApiClient.Dtos;
+﻿using MLControlStock.Core.ApiClient.Dtos;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.ApiClient.JsonConverters
+namespace MLControlStock.Core.ApiClient.JsonConverters
 {
     public class ApiRestConverter<T>: JsonConverter
     {

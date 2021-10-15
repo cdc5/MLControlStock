@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.ApiClient.Dtos
+namespace MLControlStock.Core.ApiClient.Dtos
 {
     public class ApiClientResponseSingle<T>
     {

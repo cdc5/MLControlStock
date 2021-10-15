@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FundaGes.Core.QueryFilters
+namespace MLControlStock.Core.QueryFilters
 {
     public class EstablecimientoQueryFilter
     {

@@ -5,14 +5,13 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace FundaGes.Core.Entities
+namespace MLControlStock.Core.Entities
 {
     public partial class Turnos
     {
         public Turnos()
         {
-            TurnosRenspas = new HashSet<TurnosRenspas>();
-            TurnosVacunas = new HashSet<TurnosVacunas>();
+           
         }
 
         public int Id { get; set; }
@@ -31,11 +30,6 @@ namespace FundaGes.Core.Entities
         public string VacunadorNombre { get; set; }
         public string EstablecimientoNombre { get; set; }
 
-        public virtual Establecimiento Establecimiento { get; set; }
-        public virtual Estados EstadoNavigation { get; set; }
-        public virtual Fundaciones Fundacion { get; set; }
-        public virtual Vacunadores Vacunador { get; set; }
-        public virtual ICollection<TurnosRenspas> TurnosRenspas { get; set; }
-        public virtual ICollection<TurnosVacunas> TurnosVacunas { get; set; }
+        
     }
 }

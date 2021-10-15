@@ -1,4 +1,4 @@
-﻿namespace FundaGes.Core.Entities
+﻿namespace MLControlStock.Core.Entities
 {
     public class UserLogin
     {
