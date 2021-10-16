@@ -20,6 +20,8 @@ namespace MLControlStock.Core.Interfaces
         Task Insert(T entity);
         Task AddRange(IEnumerable<T> entity);
         void Update(T entity);
+        
+        Task Delete(T entity);
         Task Delete(int id);
         Task Delete(string id);
         void Desacoplar(T entity);

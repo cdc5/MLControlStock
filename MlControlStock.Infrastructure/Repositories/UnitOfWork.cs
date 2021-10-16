@@ -12,8 +12,7 @@ namespace MLControlStock.Infrastructure.Repositories
     public class UnitOfWork:IUnitOfWork
     {
         private readonly MLControlStockContext _context;
-        private readonly ITurnoRepository _turnoRepository;
-        private readonly IRepository<Actas> _actaRepository;
+        private readonly IRepository<Stock> _stockRepository;
        
 
         public UnitOfWork(MLControlStockContext context)
@@ -21,8 +20,7 @@ namespace MLControlStock.Infrastructure.Repositories
             _context = context;
         }
 
-        public ITurnoRepository TurnoRepository => _turnoRepository ?? new TurnoRepository(_context);
-        public IRepository<Actas> ActaRepository => _actaRepository ?? new Repository<Actas>(_context);
+        public IRepository<Stock> StockRepository => _stockRepository ?? new Repository<Stock>(_context);
         
         public void Dispose()
         {

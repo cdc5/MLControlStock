@@ -96,7 +96,10 @@ namespace MLControlStock.Infrastructure.Repositories
         //    _context.Entry(entity).State = EntityState.Modified;
         //}
 
-
+        public async Task Delete(T entity)
+        {
+            _entities.Remove(entity);
+        }
 
         public async Task Delete(int id)
         {
