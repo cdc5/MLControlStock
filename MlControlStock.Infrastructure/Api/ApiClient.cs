@@ -111,16 +111,16 @@ namespace MLControlStock.Infrastructure.Api
         //    resultObject.okMessage = response2.Data.Data;
         //    resultObject.warning = response2.Data.warning;
         //    return resultObject;
-            
-            
+
+
         //}
-        
+
         //async Task<ApiClientResponse<TResponse>> HttpWebRequestPost<T, TResponse>(T content, string uri, bool IsStringResponse, bool IsSingleObject = false)
         //{
         //    var request = (HttpWebRequest)WebRequest.Create("https://test.senasa.gov.ar/"+uri);
 
         //    var json = JsonConvert.SerializeObject(content);
-            
+
         //    var data = Encoding.ASCII.GetBytes(json);
 
         //    request.Method = "POST";
@@ -178,7 +178,7 @@ namespace MLControlStock.Infrastructure.Api
         //    //Consultar info sobre las campañas de los planes asigandos
         //    using (var cliente = new HttpClient())
         //    {
-                
+
         //        cliente.Timeout = TimeSpan.FromSeconds(300);
         //        var json = JsonConvert.SerializeObject(content);
         //        var data = new StringContent(json, Encoding.UTF8, "application/json");
@@ -262,8 +262,33 @@ namespace MLControlStock.Infrastructure.Api
         //        //var result = JsonConvert.DeserializeObject<TResponse>(responseAux, dateTimeConverter);            
         //        return null;
         //    }
-            
+
         //}
+
+        public async Task<TResponse> Get<TResponse>(string uri)
+        {
+            var cliente = _clientFact.CreateClient("Api.ML");
+            var response = await cliente.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<TResponse>(content);
+                return result;
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new BusinessException("No se encuentra el recurso solicitado en Api Mercado Libre");
+            }
+            else
+                throw new BusinessException("Error en solicitud Api Mercado Libre");            
+        }
+
+        public async Task<ItemResponse> Items(string Producto)
+        {
+            return await Get<ItemResponse>(string.Format("items/{0}",Producto));
+        }
+
 
         public async Task<ApiClientResponse<TResponse>> Post<T, TResponse>(T content, string uri,bool IsStringResponse,bool IsSingleObject = false)
         {

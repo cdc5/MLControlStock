@@ -29,11 +29,20 @@ namespace MLControlStock.Core.Services
             _Mapper = mapper;    
         }
 
-        public async Task<IEnumerable<Stock>> GetStock(string deposito,string ubicacion)
+        public IEnumerable<Stock> GetStock(string deposito, string ubicacion)
         {
-            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito);
-            if (stock != null)
-                throw new BusinessException(String.Format("No se encuentran productos en la ubicación {0}-{1}",deposito,ubicacion));
+            ValidarUbicacion(ubicacion);
+            Ubicacion ubi = new Ubicacion(ubicacion);
+            var stock = GetStock(deposito, ubi);
+            if (stock == null)
+                throw new BusinessException(String.Format("No se encuentran productos en la ubicación {0}-{1}", deposito, ubicacion));
+            return stock;
+        }
+
+        public IEnumerable<Stock> GetStock(string deposito,Ubicacion ubicacion)
+        {
+            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubicacion.Area && x.Pasillo == ubicacion.Pasillo 
+                                                        && x.Fila == ubicacion.Fila && x.Cara == ubicacion.Cara);            
             return stock;
         }
 
@@ -55,38 +64,79 @@ namespace MLControlStock.Core.Services
 
         public async Task<Stock> AgregarProducto(string deposito, string ubicacion,string producto,int cantidad)
         {
-            if (!ValidarUbicacion(ubicacion))
-                throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{Area}}-{{Pasillo}}-{{Fila}}-{{Cara}}", ubicacion));
-
-            if (!EstaEnDeposito(producto))
-                throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{Area}}-{{Pasillo}}-{{Fila}}-{{Cara}}", ubicacion));
-
+            Stock stock;
+            ValidarUbicacion(ubicacion);
+            await EstaEnDeposito(producto);
             Ubicacion ubi = new Ubicacion(ubicacion);
-            Stock stock = new Stock();
-            stock.Deposito = deposito;
-            stock.Area = ubi.Area;
-            stock.Pasillo = ubi.Pasillo;
-            stock.Fila = ubi.Fila;
-            stock.Cara = ubi.Cara;
-            stock.ProductId = producto;
-            stock.Cantidad = cantidad;
-            
-            await _UnitOfWork.StockRepository.Insert(stock);
+            var stocks = GetStock(deposito, ubi);
+            if (stocks != null)
+            {
+                ValidarLugarDisponibleEnUbicacion(stocks, ubicacion, cantidad);            
+                stock = stocks.Where(x => x.ProductId == producto).FirstOrDefault();
+                if (stock == null)
+                {
+                    stock = NuevoStock(deposito, ubi, producto, cantidad);
+                    await _UnitOfWork.StockRepository.Insert(stock);
+                }
+                else
+                {
+                    stock.Cantidad += cantidad;
+                     _UnitOfWork.StockRepository.Update(stock);
+                }                    
+            }
+            else
+            {
+                stock = NuevoStock(deposito, ubi, producto, cantidad);
+                await _UnitOfWork.StockRepository.Insert(stock);
+            }            
+           
             await _UnitOfWork.SaveChangesAsync();
             return stock;
         }
 
-        private bool ValidarUbicacion(string ubicacion)
+        private Stock NuevoStock(string deposito, Ubicacion ubicacion, string producto, int cantidad)
         {
-            Regex ValidacionUbicacion = new Regex(@"\A[A-Z][A-Z]-[0-9][0-9]-[0-9][0-9]-(IZ|DE)\Z");
-            if (ValidacionUbicacion.IsMatch(ubicacion))
-                return true;
-            return false;
+            var stock = new Stock();
+            stock.Deposito = deposito;
+            stock.Area = ubicacion.Area;
+            stock.Pasillo = ubicacion.Pasillo;
+            stock.Fila = ubicacion.Fila;
+            stock.Cara = ubicacion.Cara;
+            stock.ProductId = producto;
+            stock.Cantidad = cantidad;
+            return stock;
         }
 
-        private bool EstaEnDeposito(string producto)
+        private void ValidarUbicacion(string ubicacion)
         {
-            return true;
+            Regex ValidacionUbicacion = new Regex(@"\A[A-Z][A-Z]-[0-9][0-9]-[0-9][0-9]-(IZ|DE)\Z");
+            if (!ValidacionUbicacion.IsMatch(ubicacion))
+               throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{Area}}-{{Pasillo}}-{{Fila}}-{{Cara}}", ubicacion));
+        }
+
+        private void ValidarLugarDisponibleEnUbicacion(IEnumerable<Stock> stock,string ubicacion, int cantidad)
+        {
+            //Se podría cambiar por una función que llame a un Stored Procedure que traiga la cantidad de items en la ubicación directamente 
+            //o que devuelva si hay lugar disponible
+            if (stock != null)
+            {
+                if (stock.Count() > 2)
+                    throw new BusinessException(String.Format("Existen más de tres productos en la ubicación: {0}", ubicacion));
+
+                if (stock.Sum(x=>x.Cantidad) + cantidad > 100)
+                    throw new BusinessException(String.Format("Existen más de cien productos en la ubicación: {0}", ubicacion));
+            }
+            //Se podría dividir este método para cumplir criterios de unicidad en función en dos, por ejemplo LugarDisponibleEnUbicacion y HayMenosDeCientProductos 
+            //pero para hacer una sola llamada a la base se realizan bajo el mismo ámbito.                       
+        }       
+
+
+        private async Task EstaEnDeposito(string producto)
+        {
+            ItemResponse item = await _ApiClient.Items(producto);
+            if (item != null)
+                if (item.shipping.logistic_type != "fulfillment")
+                    throw new BusinessException("El producto no se encuentra en nuestros depósitos (no es fulfillment).");            
         }
 
         public async Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad)

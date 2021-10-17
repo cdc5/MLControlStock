@@ -12,7 +12,6 @@ namespace MLControlStock.Core.Interfaces
     {
         //Task Test();
         //Task<ApiClientResponse<ApiCampañasDto>> Campañas(TokenSenasaContent tokenContent);
-        
-
+        Task<ItemResponse> Items(string Producto);
     }
 }

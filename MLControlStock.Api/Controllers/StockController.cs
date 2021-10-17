@@ -28,9 +28,9 @@ namespace FundaGes.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetActas([FromQuery] string deposito, [FromQuery] string ubicacion)
+        public async Task<IActionResult> Get([FromQuery] string deposito, [FromQuery] string ubicacion)
         {
-            var stock = await _stockService.GetStock(deposito,ubicacion);
+            var stock = _stockService.GetStock(deposito,ubicacion);
             return Ok(stock);
         }
 
