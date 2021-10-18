@@ -49,7 +49,7 @@ namespace MLControlStock.Core.Services
         public IEnumerable<StockPorProductoDto> GetStockPorProducto(string deposito, string producto)
         {
             StockPorProductoDto stockPorProducto = new StockPorProductoDto();
-            List < StockPorProductoDto> ListaStock = new List<StockPorProductoDto>();
+            List <StockPorProductoDto> ListaStock = new List<StockPorProductoDto>();
             var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.ProductId == producto);
             if (stock == null)
                 throw new BusinessException(String.Format("No se encuentra el producto {0} en el depósito {1}", producto, deposito));
@@ -71,12 +71,20 @@ namespace MLControlStock.Core.Services
             return string.Format("{0}-{1}-{2}-{3}", Area, Pasillo, Fila, Cara);
         }
 
-        public Stock GetStockPorProductoUbicacion(string deposito, string producto)
+        public Stock GetStockPorProductoUbicacion(string deposito, string ubicacion, string producto)
         {
-            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.ProductId == producto).FirstOrDefault();
-            if (stock != null)
-                throw new BusinessException(String.Format("No se encuentran el producto {0} en el depósito {1}", producto, deposito));
-            return stock;
+            ValidarUbicacion(ubicacion);
+            Ubicacion ubi = new Ubicacion(ubicacion);
+            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubi.Area && x.Pasillo == ubi.Pasillo
+                                                       && x.Fila == ubi.Fila && x.Cara == ubi.Cara && x.ProductId == producto);
+            if (stock == null)
+                throw new BusinessException(String.Format("No se encuentra el producto {0} en la ubicación:{1}-{2}", producto, deposito,ubicacion ));
+
+            //Corroborar en Testing
+            if (stock.Count() > 1)
+                throw new BusinessException(String.Format("El producto {0} existe {1} veces en la ubicación:{2}-{3}", producto, stock.Count(),deposito, ubicacion));
+
+            return stock.FirstOrDefault();
         }
 
         public async Task<Stock> AgregarProducto(string deposito, string ubicacion,string producto,int cantidad)
@@ -158,7 +166,7 @@ namespace MLControlStock.Core.Services
 
         public async Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad)
         {
-            var stock = GetStockPorProductoUbicacion(producto, ubicacion);
+            var stock = GetStockPorProductoUbicacion(deposito,ubicacion,producto);
             if (stock == null)
                 throw new BusinessException(String.Format("No se encuentra el Producto:{0} en la ubicación:{1}-{2}", producto,deposito,ubicacion));
 
