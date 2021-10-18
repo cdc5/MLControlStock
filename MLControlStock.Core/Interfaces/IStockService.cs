@@ -10,8 +10,9 @@ namespace MLControlStock.Core.Interfaces
 {
     public interface IStockService
     {
-        IEnumerable<Stock> GetStock(string deposito, string ubicacion);
-        IEnumerable<Stock> GetStock(string deposito, Ubicacion ubicacion);        
+        IEnumerable<StockDto> GetStock(string deposito, string ubicacion);
+        IEnumerable<Stock> GetStock(string deposito, Ubicacion ubicacion);
+        IEnumerable<StockPorProductoDto> GetStockPorProducto(string deposito, string producto);
         Task<Stock> AgregarProducto(string deposito, string ubicacion, string producto, int cantidad);
         Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad);
     }

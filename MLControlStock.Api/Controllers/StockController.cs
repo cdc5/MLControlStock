@@ -31,21 +31,37 @@ namespace FundaGes.Api.Controllers
         public async Task<IActionResult> Get([FromQuery] string deposito, [FromQuery] string ubicacion)
         {
             var stock = _stockService.GetStock(deposito,ubicacion);
-            return Ok(stock);
+            var response = new ApiResponse<IEnumerable<StockDto>>(stock);
+            return Ok(response);
+        }
+
+        [HttpGet("{deposito}/{producto}")]
+        public async Task<IActionResult> GetPorProducto(string deposito, string producto)
+        {
+            IEnumerable<StockPorProductoDto> stock = new List<StockPorProductoDto>();
+            //if (filters != null)
+            //{
+            //    if (filters.deposito != null && filters.producto != null)
+                    stock = _stockService.GetStockPorProducto(deposito, producto);
+            //}            
+            var response = new ApiResponse<IEnumerable<StockPorProductoDto>>(stock);
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromQuery] string deposito, [FromQuery] string ubicacion, [FromQuery] string producto, [FromQuery] int cantidad)
         {
             var stock = await _stockService.AgregarProducto(deposito,ubicacion,producto,cantidad);
-            return Ok(stock);
+            var response = new ApiResponse<Stock>(stock);
+            return Ok(response);
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] string deposito, [FromQuery] string ubicacion, [FromQuery] string producto, [FromQuery] int cantidad)
         {
             var result = await _stockService.RetirarProducto(deposito, ubicacion, producto, cantidad);
-            return Ok(result);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
         }
 
 

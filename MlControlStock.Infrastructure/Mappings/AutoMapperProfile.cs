@@ -143,7 +143,7 @@ namespace MLControlStock.Infrastructure.Mappings
             //    .ForMember(dest => dest.Vacunador, opt => opt.MapFrom(x => x.CuitVacunador))
             //    .ForMember(dest => dest.ActasAnimales, opt => opt.MapFrom(x => x.Stock))
             //    .ForMember(dest => dest.ActasAnimalesDDJJ, opt => opt.MapFrom(x => x.StockDDJJ));
-                
+
 
             //CreateMap<StockDto, ActasAnimales>()
             //        .ForMember(dest => dest.Cantidad, opt => opt.MapFrom(x => x.cantidad))
@@ -161,7 +161,7 @@ namespace MLControlStock.Infrastructure.Mappings
             //    .ForMember(dest => dest.cantidad, opt => opt.MapFrom(x => x.Cantidad))
             //    .ForPath(dest => dest.categoria.id, opt => opt.MapFrom(x => x.AnimalesID));
 
-            
+
             //CreateMap<Animales, AnimalesDto>();
             //CreateMap<ApiAnimalesDto, Animales>()
             //        .ForMember(dest => dest.Codigo, opt => opt.MapFrom(x => x.codigo))
@@ -181,7 +181,7 @@ namespace MLControlStock.Infrastructure.Mappings
             //    .ForMember(dest => dest.Estado, opt => opt.MapFrom(x => x.NombreEstado))
             //    .ForMember(dest => dest.stockVacunado, opt => opt.MapFrom(x => x.ActasAnimales))
             //    .ForMember(dest => dest.stockCensado, opt => opt.MapFrom(x => x.ActasAnimalesDDJJ));
-                
+
             //CreateMap<ActasAnimales, ApiStockDto>()
             //        .ForMember(dest => dest.cantidad, opt => opt.MapFrom(x => x.Cantidad))
             //        .ForMember(dest => dest.codigoCategoria, opt => opt.MapFrom(x => x.AnimalesCodigo))
@@ -250,6 +250,9 @@ namespace MLControlStock.Infrastructure.Mappings
             //CreateMap<Vacunas, VacunaDto>();
             //CreateMap<VacunaDto, Vacunas>();
 
-        }      
+            CreateMap<Stock, StockDto>();
+            
+
+        }
     }
 }

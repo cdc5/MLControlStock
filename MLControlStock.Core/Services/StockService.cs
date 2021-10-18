@@ -28,33 +28,50 @@ namespace MLControlStock.Core.Services
             _ApiClient = ApiClient;
             _Mapper = mapper;    
         }
+        public IEnumerable<Stock> GetStock(string deposito, Ubicacion ubicacion)
+        {
+            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubicacion.Area && x.Pasillo == ubicacion.Pasillo
+                                                        && x.Fila == ubicacion.Fila && x.Cara == ubicacion.Cara);
+            return stock;
+        }
 
-        public IEnumerable<Stock> GetStock(string deposito, string ubicacion)
+        public IEnumerable<StockDto> GetStock(string deposito, string ubicacion)
         {
             ValidarUbicacion(ubicacion);
             Ubicacion ubi = new Ubicacion(ubicacion);
             var stock = GetStock(deposito, ubi);
             if (stock == null)
                 throw new BusinessException(String.Format("No se encuentran productos en la ubicación {0}-{1}", deposito, ubicacion));
-            return stock;
-        }
+            var stockDto = _Mapper.Map<IEnumerable<StockDto>>(stock);
+            return stockDto;
+        }       
 
-        public IEnumerable<Stock> GetStock(string deposito,Ubicacion ubicacion)
+        public IEnumerable<StockPorProductoDto> GetStockPorProducto(string deposito, string producto)
         {
-            var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubicacion.Area && x.Pasillo == ubicacion.Pasillo 
-                                                        && x.Fila == ubicacion.Fila && x.Cara == ubicacion.Cara);            
-            return stock;
-        }
-
-        public async Task<IEnumerable<Stock>> GetStockPorProducto(string deposito, string producto)
-        {
+            StockPorProductoDto stockPorProducto = new StockPorProductoDto();
+            List < StockPorProductoDto> ListaStock = new List<StockPorProductoDto>();
             var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.ProductId == producto);
-            if (stock != null)
-                throw new BusinessException(String.Format("No se encuentran el producto {0} en el depósito {1}", producto, deposito));
-            return stock;
+            if (stock == null)
+                throw new BusinessException(String.Format("No se encuentra el producto {0} en el depósito {1}", producto, deposito));
+
+            
+            foreach (var s in stock)
+            {
+                stockPorProducto = new StockPorProductoDto();
+                stockPorProducto.deposito = s.Deposito;
+                stockPorProducto.ubicacion = UbicacionAString(s.Area,s.Pasillo,s.Fila,s.Cara);
+                stockPorProducto.cantidad = s.Cantidad;
+                ListaStock.Add(stockPorProducto);
+            }            
+            return ListaStock;
         }
 
-        public async Task<Stock> GetStockPorProductoUbicacion(string deposito, string producto)
+        private string UbicacionAString(string Area, string Pasillo, string Fila, string Cara)
+        {
+            return string.Format("{0}-{1}-{2}-{3}", Area, Pasillo, Fila, Cara);
+        }
+
+        public Stock GetStockPorProductoUbicacion(string deposito, string producto)
         {
             var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.ProductId == producto).FirstOrDefault();
             if (stock != null)
@@ -141,7 +158,7 @@ namespace MLControlStock.Core.Services
 
         public async Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad)
         {
-            var stock = await GetStockPorProductoUbicacion(producto, ubicacion);
+            var stock = GetStockPorProductoUbicacion(producto, ubicacion);
             if (stock == null)
                 throw new BusinessException(String.Format("No se encuentra el Producto:{0} en la ubicación:{1}-{2}", producto,deposito,ubicacion));
 

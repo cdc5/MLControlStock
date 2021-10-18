@@ -15,6 +15,6 @@ namespace MLControlStock.Core.Entities
         public string Fila { get; set; }
         public string Cara { get; set; }
         public string ProductId { get; set; }
-        public int? Cantidad { get; set; }
+        public int Cantidad { get; set; }
     }
 }
