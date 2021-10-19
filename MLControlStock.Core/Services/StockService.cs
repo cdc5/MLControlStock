@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
-using MLControlStock.Core.ApiClient.Content;
 using MLControlStock.Core.ApiClient.Dtos;
 using MLControlStock.Core.DTOs;
 using MLControlStock.Core.Entities;
 using MLControlStock.Core.Exceptions;
 using MLControlStock.Core.Interfaces;
-using MLControlStock.Core.QueryFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 

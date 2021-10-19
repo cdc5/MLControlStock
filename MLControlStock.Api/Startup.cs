@@ -1,33 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using MLControlStock.Core.Interfaces;
-using MLControlStock.Infrastructure.Repositories;
-using MLControlStock.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation.AspNetCore;
 using MLControlStock.Core.Services;
 using MLControlStock.Infrastructure.Api;
+using MLControlStock.Infrastructure.Data;
 using MLControlStock.Infrastructure.Filters;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.Data.SqlClient;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
+using MLControlStock.Infrastructure.Repositories;
+using System;
 using System.IO;
-using System.Net.Http;
-using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
 
 
 namespace MLControlStock.Api
@@ -50,16 +39,7 @@ namespace MLControlStock.Api
                 client.BaseAddress = new Uri("https://api.mercadolibre.com/");
                 client.Timeout = TimeSpan.FromSeconds(300);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            });
-            //.ConfigurePrimaryHttpMessageHandler(() =>
-            //{
-            //    return new HttpClientHandler()
-            //    {
-            //        AllowAutoRedirect = true,
-            //        AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip |
-            //                                 DecompressionMethods.Brotli
-            //    };
-            //});
+            });           
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
