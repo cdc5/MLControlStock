@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace FundaGes.Api.Controllers
+namespace MLControlStock.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]    
@@ -60,7 +60,7 @@ namespace FundaGes.Api.Controllers
         public async Task<IActionResult> Delete([FromQuery] string deposito, [FromQuery] string ubicacion, [FromQuery] string producto, [FromQuery] int cantidad)
         {
             var result = await _stockService.RetirarProducto(deposito, ubicacion, producto, cantidad);
-            var response = new ApiResponse<bool>(result);
+            var response = new ApiResponse<Stock>(result);
             return Ok(response);
         }
 

@@ -13,4 +13,10 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MLControlStock.Api\MLControlStock.Api.csproj" />
+    <ProjectReference Include="..\MLControlStock.Core\MLControlStock.Core.csproj" />
+    <ProjectReference Include="..\MlControlStock.Infrastructure\MlControlStock.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

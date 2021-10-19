@@ -28,6 +28,7 @@ namespace MLControlStock.Core.Services
             _ApiClient = ApiClient;
             _Mapper = mapper;    
         }
+
         public IEnumerable<Stock> GetStock(string deposito, Ubicacion ubicacion)
         {
             var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubicacion.Area && x.Pasillo == ubicacion.Pasillo
@@ -77,10 +78,9 @@ namespace MLControlStock.Core.Services
             Ubicacion ubi = new Ubicacion(ubicacion);
             var stock = _UnitOfWork.StockRepository.Get(x => x.Deposito == deposito && x.Area == ubi.Area && x.Pasillo == ubi.Pasillo
                                                        && x.Fila == ubi.Fila && x.Cara == ubi.Cara && x.ProductId == producto);
-            if (stock == null)
+            if (stock == null || stock.Count() == 0)
                 throw new BusinessException(String.Format("No se encuentra el producto {0} en la ubicación:{1}-{2}", producto, deposito,ubicacion ));
 
-            //Corroborar en Testing
             if (stock.Count() > 1)
                 throw new BusinessException(String.Format("El producto {0} existe {1} veces en la ubicación:{2}-{3}", producto, stock.Count(),deposito, ubicacion));
 
@@ -96,7 +96,7 @@ namespace MLControlStock.Core.Services
             var stocks = GetStock(deposito, ubi);
             if (stocks != null)
             {
-                ValidarLugarDisponibleEnUbicacion(stocks, ubicacion, cantidad);            
+                ValidarLugarDisponibleEnUbicacion(stocks, ubicacion, producto,cantidad);            
                 stock = stocks.Where(x => x.ProductId == producto).FirstOrDefault();
                 if (stock == null)
                 {
@@ -139,14 +139,18 @@ namespace MLControlStock.Core.Services
                throw new BusinessException(String.Format("La ubicación:{0} no cumple con el formato requerido {{Area}}-{{Pasillo}}-{{Fila}}-{{Cara}}", ubicacion));
         }
 
-        private void ValidarLugarDisponibleEnUbicacion(IEnumerable<Stock> stock,string ubicacion, int cantidad)
+        private void ValidarLugarDisponibleEnUbicacion(IEnumerable<Stock> stock,string ubicacion, string producto,int cantidad)
         {
             //Se podría cambiar por una función que llame a un Stored Procedure que traiga la cantidad de items en la ubicación directamente 
             //o que devuelva si hay lugar disponible
             if (stock != null)
             {
-                if (stock.Count() > 2)
-                    throw new BusinessException(String.Format("Existen más de tres productos en la ubicación: {0}", ubicacion));
+                List<string> productos = stock.Select(x => x.ProductId).ToList();
+                if (!productos.Contains(producto))
+                {
+                    if (stock.Count() > 2)
+                        throw new BusinessException(String.Format("Existen más de tres productos en la ubicación: {0}", ubicacion));
+                }               
 
                 if (stock.Sum(x=>x.Cantidad) + cantidad > 100)
                     throw new BusinessException(String.Format("Existen más de cien productos en la ubicación: {0}", ubicacion));
@@ -164,18 +168,16 @@ namespace MLControlStock.Core.Services
                     throw new BusinessException("El producto no se encuentra en nuestros depósitos (no es fulfillment).");            
         }
 
-        public async Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad)
+        public async Task<Stock> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad)
         {
             var stock = GetStockPorProductoUbicacion(deposito,ubicacion,producto);
-            if (stock == null)
-                throw new BusinessException(String.Format("No se encuentra el Producto:{0} en la ubicación:{1}-{2}", producto,deposito,ubicacion));
-
+            
             if (cantidad > stock.Cantidad)
                 throw new BusinessException(String.Format("La cantidad ({0}) a retirar es mayor al stock disponible",cantidad));
 
+            stock.Cantidad -= cantidad;
             if (cantidad < stock.Cantidad)
-            {
-                stock.Cantidad -= cantidad;
+            {                
                 _UnitOfWork.StockRepository.Update(stock);
             }
             else
@@ -183,7 +185,7 @@ namespace MLControlStock.Core.Services
                 await _UnitOfWork.StockRepository.Delete(stock);
             }            
             await _UnitOfWork.SaveChangesAsync();
-            return true;
+            return stock;
         }
     }
 }

@@ -14,6 +14,6 @@ namespace MLControlStock.Core.Interfaces
         IEnumerable<Stock> GetStock(string deposito, Ubicacion ubicacion);
         IEnumerable<StockPorProductoDto> GetStockPorProducto(string deposito, string producto);
         Task<Stock> AgregarProducto(string deposito, string ubicacion, string producto, int cantidad);
-        Task<bool> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad);
+        Task<Stock> RetirarProducto(string deposito, string ubicacion, string producto, int cantidad);
     }
 }
