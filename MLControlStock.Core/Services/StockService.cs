@@ -63,6 +63,17 @@ namespace MLControlStock.Core.Services
             return ListaStock;
         }
 
+        public async Task<IEnumerable<StockPorProductoDto>> GetStockPorProductoSP(string deposito, string producto)
+        {
+            StockPorProductoDto stockPorProducto = new StockPorProductoDto();
+            IEnumerable<StockPorProductoDto> ListaStock = new List<StockPorProductoDto>();
+            var stock = await _UnitOfWork.StockRepository.GetStockPorProductoSP(deposito,producto);
+            if (stock == null)
+                throw new BusinessException(String.Format("No se encuentra el producto {0} en el depósito {1}", producto, deposito));
+            ListaStock = _Mapper.Map<IEnumerable<StockPorProductoDto>>(stock);
+            return ListaStock;
+        }
+
         private string UbicacionAString(string Area, string Pasillo, string Fila, string Cara)
         {
             return string.Format("{0}-{1}-{2}-{3}", Area, Pasillo, Fila, Cara);

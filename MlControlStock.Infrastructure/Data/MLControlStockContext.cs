@@ -21,6 +21,8 @@ namespace MLControlStock.Infrastructure.Data
         }
 
         public virtual DbSet<Stock> Stock { get; set; }
+        
+        public virtual DbSet<StockPorProducto> StockPorProducto { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -67,8 +69,10 @@ namespace MLControlStock.Infrastructure.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");                
+                
             });
+            modelBuilder.Entity<StockPorProducto>().HasNoKey();
 
             OnModelCreatingPartial(modelBuilder);
         }

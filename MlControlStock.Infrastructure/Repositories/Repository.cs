@@ -7,12 +7,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using MLControlStock.Core.Entities;
 
 namespace MLControlStock.Infrastructure.Repositories
 {
     public class Repository<T>: IRepository<T> where T: class
     {
-        private readonly MLControlStockContext _context;
+        protected readonly MLControlStockContext _context;
         protected readonly DbSet<T> _entities;
 
         public Repository(MLControlStockContext context)
@@ -49,7 +50,6 @@ namespace MLControlStock.Infrastructure.Repositories
             {
                 return query.ToList();
             }
-//            return _entities.AsEnumerable();
         }
 
         public T GetFirst(Expression<Func<T, bool>> filter = null,string includeProperties = "")
@@ -113,5 +113,6 @@ namespace MLControlStock.Infrastructure.Repositories
             _entities.Remove(entity);
         }
 
+        
     }
 }

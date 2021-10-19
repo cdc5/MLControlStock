@@ -9,6 +9,7 @@ namespace MLControlStock.Infrastructure.Mappings
         public AutoMapperProfile()
         {
             CreateMap<Stock, StockDto>();
+            CreateMap<StockPorProducto, StockPorProductoDto>();
         }
     }
 }

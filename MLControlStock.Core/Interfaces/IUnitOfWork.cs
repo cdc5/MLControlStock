@@ -6,7 +6,7 @@ namespace MLControlStock.Core.Interfaces
 {
     public interface IUnitOfWork:IDisposable
     {
-        IRepository<Stock> StockRepository { get; }
+        IStockRepository StockRepository { get; }
         void SaveChanges();
         Task SaveChangesAsync();
     }

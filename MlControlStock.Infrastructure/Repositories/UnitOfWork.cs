@@ -6,13 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MlControlStock.Infrastructure.Repositories;
 
 namespace MLControlStock.Infrastructure.Repositories
 {
     public class UnitOfWork:IUnitOfWork
     {
         private readonly MLControlStockContext _context;
-        private readonly IRepository<Stock> _stockRepository;
+        private readonly IStockRepository _stockRepository;
        
 
         public UnitOfWork(MLControlStockContext context)
@@ -20,7 +21,7 @@ namespace MLControlStock.Infrastructure.Repositories
             _context = context;
         }
 
-        public IRepository<Stock> StockRepository => _stockRepository ?? new Repository<Stock>(_context);
+        public IStockRepository StockRepository => _stockRepository ?? new StockRepository(_context);
         
         public void Dispose()
         {

@@ -38,8 +38,10 @@ namespace MlControlStock.UnitTests.MLControlStock.Api.Tests
             _controller = new StockController(_stockService,_mapper);
         }
 
-        //Get
+        //Se decide testear los controladores directamente y no unidades funcionales mas pequeñas para realizar una muestra 
+        //general del testeo del proyecto completo.
 
+        //Get
         [Fact]
         public async Task Get_AlInvocar_RetornaOkResultAsync()
         {
@@ -101,7 +103,7 @@ namespace MlControlStock.UnitTests.MLControlStock.Api.Tests
             string ubicacion3 = "LM-01-01-DE";
 
 
-            var okResult = await _controller.GetPorProducto(deposito, producto) as OkObjectResult;
+            var okResult = await _controller.GetStockPorProducto(deposito, producto) as OkObjectResult;
             var items = Assert.IsType<ApiResponse<IEnumerable<StockPorProductoDto>>>(okResult.Value);
             var lista = (List<StockPorProductoDto>)items.Data;            
             
@@ -114,8 +116,33 @@ namespace MlControlStock.UnitTests.MLControlStock.Api.Tests
             Assert.Contains(ubicacion3, ubicaciones);           
 
         }
-        //SE decide testear los controladores directamente y no unidades funcionales mas pequeñas para realizar una muestra 
-        //general del testeo del proyecto completo.
+
+        //GetPorProducto
+        [Fact]
+        public async Task GetPorProductoSP_AlInvocar_RetornaLasUbicacionesCorrectas()
+        {
+            string deposito = "AR01";
+            string producto = "MLA813727183";
+            int cantidadTotal = 89;
+            string ubicacion1 = "LM-00-00-IZ";
+            string ubicacion2 = "LM-04-02-IZ";
+            string ubicacion3 = "LM-01-01-DE";
+
+
+            var okResult = await _controller.GetStockPorProductoSP(deposito, producto) as OkObjectResult;
+            var items = Assert.IsType<ApiResponse<IEnumerable<StockPorProductoDto>>>(okResult.Value);
+            var lista = (List<StockPorProductoDto>)items.Data;
+
+            Assert.Equal(3, lista.Count());
+            Assert.Equal(lista.Sum(x => x.cantidad), cantidadTotal);
+
+            List<string> ubicaciones = lista.Select(x => x.ubicacion).ToList();
+            Assert.Contains(ubicacion1, ubicaciones);
+            Assert.Contains(ubicacion2, ubicaciones);
+            Assert.Contains(ubicacion3, ubicaciones);
+
+        }
+      
 
         //Post
         //Formatos incorrectos de ubicacion

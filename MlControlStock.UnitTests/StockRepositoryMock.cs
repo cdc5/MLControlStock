@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MLControlStock.Core.DTOs;
 using MLControlStock.Core.Entities;
 using MLControlStock.Core.Interfaces;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MlControlStock.UnitTests
 {
-    public class StockRepositoryMock : IRepository<Stock>
+    public class StockRepositoryMock : IStockRepository
     {
         //Simula el repositorio del tipo T con una lista, a donde se agregan, retirar y modifican las entidades
         //como si fuera el acceso a la Base de Datos
@@ -122,6 +123,18 @@ namespace MlControlStock.UnitTests
                 && x.Fila == entity.Fila && x.Cara == entity.Cara && x.ProductId == entity.ProductId).FirstOrDefault();
             stock.Cantidad = entity.Cantidad;
             
+        }
+
+        public async Task<IEnumerable<StockPorProducto>> GetStockPorProductoSP(string deposito, string ProductID)
+        {
+            var stock= Get(x => x.Deposito == deposito && x.ProductId == ProductID).ToList();
+            var stockPorProducto = stock.Select(x => new StockPorProducto
+            {
+                deposito = x.Deposito,
+                ubicacion = string.Format("{0}-{1}-{2}-{3}", x.Area, x.Pasillo, x.Fila, x.Cara),
+                cantidad = x.Cantidad
+            }).ToList();
+            return (IEnumerable<StockPorProducto>)stockPorProducto;
         }
     }
 }

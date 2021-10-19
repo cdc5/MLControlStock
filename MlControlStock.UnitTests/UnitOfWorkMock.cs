@@ -9,7 +9,7 @@ namespace MlControlStock.UnitTests
 {
     public class UnitOfWorkMock:IUnitOfWork
     {
-        IRepository<Stock> IUnitOfWork.StockRepository => new StockRepositoryMock();
+        IStockRepository IUnitOfWork.StockRepository => new StockRepositoryMock();
 
         public void Dispose()
         {

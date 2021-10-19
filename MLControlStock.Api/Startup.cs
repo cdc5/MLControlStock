@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MlControlStock.Infrastructure.Repositories;
 using MLControlStock.Core.Interfaces;
 using MLControlStock.Core.Services;
 using MLControlStock.Infrastructure.Api;
@@ -56,13 +57,14 @@ namespace MLControlStock.Api
 
             //CI
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IStockRepository), typeof(StockRepository));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IApiClient, ApiClient>();
             services.AddTransient<IStockService, StockService>();
 
             services.AddSwaggerGen(doc =>
             {
-                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "ML Control Stock API - Christian Damian Cristofano", Version = "v1" });
+                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "ML API de Control Stock - Christian Damian Cristofano", Version = "v1" });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 doc.IncludeXmlComments(xmlPath);

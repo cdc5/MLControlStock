@@ -36,14 +36,21 @@ namespace MLControlStock.Api.Controllers
         }
 
         [HttpGet("{deposito}/{producto}")]
-        public async Task<IActionResult> GetPorProducto(string deposito, string producto)
+        public async Task<IActionResult> GetStockPorProducto(string deposito, string producto)
         {
             IEnumerable<StockPorProductoDto> stock = new List<StockPorProductoDto>();
-            //if (filters != null)
-            //{
-            //    if (filters.deposito != null && filters.producto != null)
-                    stock = _stockService.GetStockPorProducto(deposito, producto);
-            //}            
+            stock = _stockService.GetStockPorProducto(deposito, producto);
+            var response = new ApiResponse<IEnumerable<StockPorProductoDto>>(stock);
+            return Ok(response);
+        }
+        
+        //Endpoint GetPorProducto_SP: Realiza la misma función que el endpoint GetPorProducto, pero su implementación
+        //esta hecha mediante llamado a Stored Procedure en la Base de Datos, realizado para mostrar otra alternativa a 
+        //la utilizada en todo el proyecto (ORM Entity Framework con Linq)
+        [HttpGet("GetStockPorProductoSP")]
+        public async Task<IActionResult> GetStockPorProductoSP(string deposito, string producto)
+        {
+            var stock = await _stockService.GetStockPorProductoSP(deposito, producto);
             var response = new ApiResponse<IEnumerable<StockPorProductoDto>>(stock);
             return Ok(response);
         }
