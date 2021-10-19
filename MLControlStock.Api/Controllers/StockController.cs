@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MLControlStock.Api.Controllers
 {
@@ -28,7 +29,7 @@ namespace MLControlStock.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string deposito, [FromQuery] string ubicacion)
+        public async Task<IActionResult> Get([FromQuery][Required] string deposito, [FromQuery][Required] string ubicacion)
         {
             var stock = _stockService.GetStock(deposito,ubicacion);
             var response = new ApiResponse<IEnumerable<StockDto>>(stock);

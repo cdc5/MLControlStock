@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MlControlStock.Infrastructure.Repositories;
 using MLControlStock.Core.Interfaces;
@@ -15,7 +17,9 @@ using MLControlStock.Infrastructure.Data;
 using MLControlStock.Infrastructure.Filters;
 using MLControlStock.Infrastructure.Repositories;
 using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 
@@ -69,6 +73,19 @@ namespace MLControlStock.Api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 doc.IncludeXmlComments(xmlPath);
             });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("es-AR"),
+                };
+                options.DefaultRequestCulture = new RequestCulture(culture: "es-AR", uiCulture: "es-AR");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +113,10 @@ namespace MLControlStock.Api
             {
                 endpoints.MapControllers();
             });
+
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
         }
+
     }
 }
