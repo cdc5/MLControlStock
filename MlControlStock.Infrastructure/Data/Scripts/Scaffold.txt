@@ -1,9 +1,0 @@
-﻿Scaffold-DbContext "Server=DESKTOP-CIR5O8S;Database=FundaGes;Integrated Security = true" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data2
-
-
-IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'FundaGes')
-  BEGIN
-    CREATE DATABASE FundaGes
-  END
-USE [FundaGes]
-GO

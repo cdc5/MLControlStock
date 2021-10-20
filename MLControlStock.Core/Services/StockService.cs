@@ -179,16 +179,20 @@ namespace MLControlStock.Core.Services
         {
             var stock = GetStockPorProductoUbicacion(deposito,ubicacion,producto);
             
+            if (cantidad < 0)
+                throw new BusinessException(String.Format("La cantidad ({0}) a retirar debe ser un número positivo", cantidad));
+
             if (cantidad > stock.Cantidad)
                 throw new BusinessException(String.Format("La cantidad ({0}) a retirar es mayor al stock disponible",cantidad));
-
-            stock.Cantidad -= cantidad;
+                        
             if (cantidad < stock.Cantidad)
-            {                
+            {
+                stock.Cantidad -= cantidad;
                 _UnitOfWork.StockRepository.Update(stock);
             }
             else
             {
+                stock.Cantidad -= cantidad;
                 await _UnitOfWork.StockRepository.Delete(stock);
             }            
             await _UnitOfWork.SaveChangesAsync();

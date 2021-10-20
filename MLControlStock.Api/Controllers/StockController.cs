@@ -37,7 +37,7 @@ namespace MLControlStock.Api.Controllers
         }
 
         [HttpGet("{deposito}/{producto}")]
-        public async Task<IActionResult> GetStockPorProducto(string deposito, string producto)
+        public async Task<IActionResult> GetStockPorProducto([Required] string deposito, [Required] string producto)
         {
             IEnumerable<StockPorProductoDto> stock = new List<StockPorProductoDto>();
             stock = _stockService.GetStockPorProducto(deposito, producto);
@@ -49,7 +49,7 @@ namespace MLControlStock.Api.Controllers
         //esta hecha mediante llamado a Stored Procedure en la Base de Datos, realizado para mostrar otra alternativa a 
         //la utilizada en todo el proyecto (ORM Entity Framework con Linq)
         [HttpGet("GetStockPorProductoSP")]
-        public async Task<IActionResult> GetStockPorProductoSP(string deposito, string producto)
+        public async Task<IActionResult> GetStockPorProductoSP([Required] string deposito, [Required] string producto)
         {
             var stock = await _stockService.GetStockPorProductoSP(deposito, producto);
             var response = new ApiResponse<IEnumerable<StockPorProductoDto>>(stock);
@@ -57,7 +57,7 @@ namespace MLControlStock.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromQuery] string deposito, [FromQuery] string ubicacion, [FromQuery] string producto, [FromQuery] int cantidad)
+        public async Task<IActionResult> Post([FromQuery][Required] string deposito, [FromQuery][Required] string ubicacion, [FromQuery][Required] string producto, [FromQuery][Required] int cantidad)
         {
             var stock = await _stockService.AgregarProducto(deposito,ubicacion,producto,cantidad);
             var response = new ApiResponse<Stock>(stock);
@@ -65,7 +65,7 @@ namespace MLControlStock.Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromQuery] string deposito, [FromQuery] string ubicacion, [FromQuery] string producto, [FromQuery] int cantidad)
+        public async Task<IActionResult> Delete([FromQuery][Required] string deposito, [FromQuery][Required] string ubicacion, [FromQuery][Required] string producto, [FromQuery][Required] int cantidad)
         {
             var result = await _stockService.RetirarProducto(deposito, ubicacion, producto, cantidad);
             var response = new ApiResponse<Stock>(result);

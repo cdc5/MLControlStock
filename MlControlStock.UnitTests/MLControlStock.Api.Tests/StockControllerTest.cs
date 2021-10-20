@@ -314,5 +314,6 @@ namespace MlControlStock.UnitTests.MLControlStock.Api.Tests
             Assert.Equal(stockEliminado.Cantidad, cantidadTotal);
         }
 
+       
     }
 }

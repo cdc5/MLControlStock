@@ -55,7 +55,7 @@ namespace MLControlStock.Api
                 });
 
 
-            var sql_connection = new SqlConnectionStringBuilder(Configuration.GetConnectionString("FundaGes"));
+            var sql_connection = new SqlConnectionStringBuilder(Configuration.GetConnectionString("MLControlStock"));
             _dbconnection = sql_connection.ConnectionString;
             services.AddDbContext<MLControlStockContext>(options => options.UseSqlServer(_dbconnection));
 
@@ -68,7 +68,7 @@ namespace MLControlStock.Api
 
             services.AddSwaggerGen(doc =>
             {
-                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "ML API de Control Stock - Christian Damian Cristofano", Version = "v1" });
+                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "ML Challenge API Control de Stock - Christian Damian Cristofano", Version = "v1" });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 doc.IncludeXmlComments(xmlPath);
