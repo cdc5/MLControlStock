@@ -27,6 +27,23 @@ Alrededor del Core implementamos las capas:
   
     -"ConnectionStrings": { "MLControlStock": "Server=SERVER1;Database=MLControlStock;Integrated Security = true" }
 
+## Estructura Base de Datos
+
+La base de datos cuenta con una sola Tabla **"stock"** que almacena todas ubicaciones para los productos. Se utiliza una clave primaria compuesta conforomada por:
+- **deposito**: alfanumérica 4 caracteres
+- **area**: alfanumérica 2 caracteres
+- **pasillo**: alfanumérica 2 caracteres
+- **fila**: alfanumérica 2 caracteres
+- **cara**: alfanumérica 2 caracteres
+- **product_id**: alfanumérica 50 caracteres
+
+Items correspondientes al formato requerido por el ejercicio para identificar la ubicacion (Deposito + ubicación) de cada producto y el identificador correspondiente al propio producto.
+
+Se supone que los productos se almacenan en cantidades enteras por lo que se utiliza el campo "**cantidad**" de tipo entero para almacenar las cantidades de cada producto .
+
+![imagen](https://user-images.githubusercontent.com/15236085/138010428-459a7256-8e86-49ae-9115-eda62ba8f45b.png)
+
+Al no existir restricciones de performance en el ejercicio no se consideró la posibilidad de utilizar identificadores únicos o de clave substituta, o de tipo entero para modelar las tablas de la base de datos.
 
 
    
