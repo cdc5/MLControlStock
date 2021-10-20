@@ -191,4 +191,4 @@ Al iniciar el proyecto, se abrirá en el explorador web la pagina de inicio (ind
 ![imagen](https://user-images.githubusercontent.com/15236085/138015708-e4fd0890-1f85-4552-a803-056434e32efa.png)
 
 
-## Muchas Gracias.
+
