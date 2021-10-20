@@ -3,9 +3,30 @@
 Control de Stock realizado por Christian Damián Cristofano
 
 Se realiza el desafio propuesto "Control de Stock" utilizando tecnología .Net Core 3.1 en C# con base de datos Sql Server.
-El proyecto esta estructurado en una arquitectura de capas similar a "Clean Architecture" .
+El proyecto esta estructurado en una arquitectura de capas similar a "Clean Architecture".
 
-En la que el core del negocio se encuentra en el centro de la aplicación,
-en la misma se modelan las entidades necesarias, en este caso solo utilizamos una clase Stock que contiene toda la información necesaria para dar solucion a la 
-problemática. La misma capa se comparte con los servicios debido al reducido tamaño de la aplicación por lo que no se consideró necesario realizar una capa única para
-los servicios.
+![Arquitectura_Capas](https://user-images.githubusercontent.com/15236085/138007524-a5a868b1-ab3f-46ac-be01-6d81c191c8aa.jpg)
+
+En la que el **Core del negocio (MLControlStock.Core)** se encuentra en el centro de la aplicación, en la misma se modelan las entidades necesarias, en este caso solo utilizamos una clase "Stock" que contiene toda la información para dar solucion a la problemática. La misma capa se comparte con los servicios debido al reducido tamaño de la aplicación por lo que no se consideró necesario realizar una capa única para los mismos. 
+
+Alrededor del Core implementamos las capas:
+  - **infraestructura (MLControlStock.Infrastructure)**: Se encarga de la conexión a la base de datos y al consumo de la API Rest de Mercado Libre para la consulta respecto al almacenamiento de los productos en los depósitos de ML.
+  - **API (MLControlStock.Api)**: Es el contacto con el mundo exterior y la capa contra la cual impactan las solicitudes REST y devuelve los recursos solicitados. Es la capa donde se alojan lso controladores.
+  - **Testing (MLControlStock.UnitTests)**: Se encarga de las pruebas unitarias del proyecto, se decidió realizar las pruebas sobre los controladores para realizar una muestra como testeo general del proyecto completo.
+
+## Instalación y uso:
+
+* El proyecto esta realizado en .Net Core 3.1 por lo que es necesaria la instalación del paquete de .Net Core correspondiente.
+* Para la creación de la base de datos se provee un Script en la carpeta MLControlStock\MlControlStock.Infrastructure\Data\Scripts\ llamado ScriptBD_MLControlStock_inicial.sql que se encarga de crear la base "MLControlStock", generar su estructura e insertar algunos datos para pruebas.
+* Se debe modificar la cadena de conexión correspondiente al atributo xml "ConnectionStrings" ubicada en el archivo appsettings.json dentro del proyecto MLControlStock.Api por el nombre del servidor en donde se instale el motor de base de datos Sql Server, reemplazar <Nombre_Servidor>
+# Ejemplo
+
+    -"ConnectionStrings": { "MLControlStock": "Server=<Nombre_servidor>;Database=MLControlStock;Integrated Security = true" }
+  
+  Reemplazar por:
+  
+    -"ConnectionStrings": { "MLControlStock": "Server=SERVER1;Database=MLControlStock;Integrated Security = true" }
+
+
+
+   
