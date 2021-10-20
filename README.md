@@ -2,7 +2,7 @@
 ## Challenge Mercado Libre
 Control de Stock realizado por Christian Damián Cristofano
 
-Se realiza el desafio propuesto "Control de Stock" utilizando tecnología .Net Core 3.1 en C# con base de datos Sql Server.
+Se realiza el desafio propuesto "Control de Stock" utilizando tecnología .Net Core 3.1 en C# con base de datos Sql Server y el ORM Entity Framework.
 El proyecto esta estructurado en una arquitectura de capas similar a "Clean Architecture".
 
 ![Arquitectura_Capas](https://user-images.githubusercontent.com/15236085/138007524-a5a868b1-ab3f-46ac-be01-6d81c191c8aa.jpg)
@@ -45,5 +45,111 @@ Se supone que los productos se almacenan en cantidades enteras por lo que se uti
 
 Al no existir restricciones de performance en el ejercicio no se consideró la posibilidad de utilizar identificadores únicos o de clave substituta, o de tipo entero para modelar las tablas de la base de datos.
 
+## API
 
+EL proyecto resuelve el problema planteado exponiendo 4 endpoints REST (+1 endpoint extra (GET/api/Stock/GetStockPorProductoSP) que cumple igual función (que GET/api/Stock/{deposito}/{product_id}) pero con distinta implementación):
+
+- GET/api/stock :Expone un endpoint de lectura. Se nos indica un depósito y una ubicación, y este lista los productos y cantidad que hay en el mismo
+- GET/api/Stock/{deposito}/{product_id}:Expone un endpoint de búsqueda. Se nos indica el depósito y producto, y este nos devuelve las posibles ubicaciones y cantidad en las mismas
+- GET/api/Stock/GetStockPorProductoSP: Este Endpoint realiza lo mismo que el endpoint GET/api/Stock/{deposito}/{product_id} pero su implementación es distinta, funciona mediante un llamado a Stored Procedure, se realizo para mostrar como se puede cambiar un método para hacerlo más performante por ejemplo
+- POST /api/Stock:Exponer un endpoint REST para agregar productos en una ubicación. Cumple con todas las validaciones solicitadas por el ejercicio
+      a. Se nos indicará el Depósito, producto, cantidad y ubicación donde quiere colocar.
+      b. Validar que la dirección tenga el patrón correcto.
+      c. Que el producto/item sea almacenado en nuestros depósitos.
+      d. No se pueden colocar más de 3 productos distintos en una ubicación.
+      e. La suma de las cantidades de los productos que hubiera en una ubicación no puede ser mayor a 100 unidades
+  **En caso de existir un producto en la ubicación proporcionada el Endpoint adicionará la cantidad proporcionada siempre y cuando no se rompan las restricciones**
+- DELETE/Api/Stock: Exponer un endpoint para poder retirar productos de una ubicación. Se nos indicará el depósito, producto, cantidad y ubicación de donde sacarla.
+  **Si la cantidad proporcionada es mayor a la existente se informa el error. Si la cantidad proporcionada es igual a la cantidad existente se elimina al producto de la base de datos y se devuelve el objeto con cantidad igual a 0 en la respusta del endpoint.**
+
+* GET/api/stock 
+  - Ejemplo: https://localhost:44379/Api/Stock?Deposito=AR01&Ubicacion=AL-01-05-DE
+  - Recibe dos parámetros requeridos por query string:
+    - deposito: string
+    - ubicacion: string
+  - Retorna
+    -"data": [
+        {
+            "productId": "MLA864423456",
+            "cantidad": 7
+        }
+    ]
    
+   * GET/api/Stock/{deposito}/{product_id}
+  - Ejemplo: https://localhost:44379/Api/Stock/AR01/MLA813727183
+  - Recibe dos parámetros requeridos, pero en este caso se pasan por url
+    - deposito: string
+    - producto: string
+  - Retorna
+    -"data": [
+        {
+            "deposito": "AR01",
+            "ubicacion": "AL-39-78-DE",
+            "cantidad": 22
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "AL-39-78-IZ",
+            "cantidad": 87
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "LM-00-00-IZ",
+            "cantidad": 50
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "LM-09-08-DE",
+            "cantidad": 51
+        }
+    ]
+    
+  * GET/api/Stock/GetStockPorProductoSP
+  - Ejemplo: https://localhost:44379/Api/Stock/GetStockPorProductoSP?Deposito=AR01&Producto=MLA813727183
+  - Recibe dos parámetros requeridos por query param
+    - deposito: string
+    - producto: string
+  - Retorna
+    -"data": [
+        {
+            "deposito": "AR01",
+            "ubicacion": "AL-39-78-DE",
+            "cantidad": 22
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "AL-39-78-IZ",
+            "cantidad": 87
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "LM-00-00-IZ",
+            "cantidad": 50
+        },
+        {
+            "deposito": "AR01",
+            "ubicacion": "LM-09-08-DE",
+            "cantidad": 51
+        }
+    ]
+    
+    * POST/api/Stock
+  - Ejemplo: https://localhost:44379/Api/Stock?deposito=AR01&ubicacion=LM-09-08-DE&producto=MLA813727183&cantidad=51
+  - Recibe cuatro parámetros requeridos por query param
+    - deposito: string
+    - ubicacion:string
+    - producto: string
+    - cantidad:int
+  - Retorna
+    -"data": {
+        "deposito": "AR01",
+        "area": "LM",
+        "pasillo": "09",
+        "fila": "08",
+        "cara": "DE",
+        "productId": "MLA813727183",
+        "cantidad": 0
+    }
+    
+    
+Todos los endpoints devuelven una estructura de respuesta unificada, un objeto data que contiene una lista de elementos retornados por cada endpoint
