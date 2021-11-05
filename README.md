@@ -11,7 +11,7 @@ En la que el **Core del negocio (MLControlStock.Core)** se encuentra en el centr
 
 Alrededor del Core implementamos las capas:
   - **infraestructura (MLControlStock.Infrastructure)**: Se encarga de la conexión a la base de datos y al consumo de la API Rest de Mercado Libre para la consulta respecto al almacenamiento de los productos en los depósitos de ML.
-  - **API (MLControlStock.Api)**: Es el contacto con el mundo exterior y la capa contra la cual impactan las solicitudes REST y devuelve los recursos solicitados. Es la capa donde se alojan lso controladores.
+  - **API (MLControlStock.Api)**: Es el contacto con el mundo exterior y la capa contra la cual impactan las solicitudes REST y devuelve los recursos solicitados. Es la capa donde se alojan los controladores.
   - **Testing (MLControlStock.UnitTests)**: Se encarga de las pruebas unitarias del proyecto.
 
 ## Instalación y uso:
